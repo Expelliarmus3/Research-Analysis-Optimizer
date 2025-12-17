@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h2 style="font-size:24px; font-weight:700;">Trending Opportunities</h2>
+<p style="color:#64748b; margin-bottom:30px;">Apply to top research internships.</p>
+
+<div class="job-grid">
+    {% if internships %}
+        {% for job in internships %}
+        <div class="job-card">
+            <div class="job-header">
+                <div>
+                    <h3 style="font-size:18px;">{{ job.title }}</h3>
+                    <p style="font-size:12px; color:#94a3b8; margin-top:4px;">{{ job.author.full_name }} • {{ job.type }}</p>
+                </div>
+                <span class="tag" style="background:#dbeafe; color:#1e40af;">{{ job.domain }}</span>
+            </div>
+            
+            <p style="font-size:13px; color:#475569; margin-bottom:15px;">
+                <b>Required Skills:</b> {{ job.required_skills }}
+            </p>
+
+            <div style="background:#f8fafc; padding:10px; border-radius:8px;">
+                <p style="font-size:12px; font-weight:700; color:#64748b; margin-bottom:8px;">UPLOAD RESUME</p>
+                <form action="/apply/{{ job.id }}" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="resume" required style="font-size:12px; width:100%;">
+                    <button type="submit" class="btn-apply">Apply Now</button>
+                </form>
+            </div>
+
+            <div class="applicant-count">
+                <i class="fa-solid fa-users"></i> {{ job.applications|length }} Students applied
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div style="text-align:center; grid-column:span 3; padding:50px; color:#94a3b8;">
+            <i class="fa-regular fa-folder-open" style="font-size:40px; margin-bottom:10px;"></i>
+            <p>No internships posted yet.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

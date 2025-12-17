@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; height: 70vh;">
+    <div class="form-box" style="text-align: center; width: 400px;">
+        <div style="width: 50px; height: 50px; background: #eef2ff; color: #6c5ce7; border-radius: 50%; display:flex; align-items:center; justify-content:center; margin: 0 auto 20px; font-size: 20px;">🔒</div>
+        <h2>Welcome to RAO</h2>
+        <p style="color: #636e72; margin-bottom: 30px;">Please login or setup your profile to access the optimization tools.</p>
+        
+        <div id="login-section">
+            <form action="/login" method="POST">
+                <div class="form-group" style="text-align:left;">
+                    <label>Email</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group" style="text-align:left;">
+                    <label>Password</label>
+                    <input type="password" name="password" required>
+                </div>
+                <button type="submit" class="btn-action" style="width: 100%;">Login</button>
+            </form>
+            <p style="margin-top:20px; font-size:14px;">New here? <a href="#" onclick="showSignup()" style="color:#6c5ce7;">Create Profile</a></p>
+        </div>
+
+        <div id="signup-section" style="display:none;">
+            <form action="/signup" method="POST">
+                <div class="form-group" style="text-align:left;">
+                    <label>I am a</label>
+                    <select name="role" style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 6px;">
+    <option value="Student">I am a Student</option>
+    <option value="Professor">I am a Professor</option>
+</select>
+                </div>
+                <div class="form-group" style="text-align:left;">
+                    <label>Email</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group" style="text-align:left;">
+                    <label>Password</label>
+                    <input type="password" name="password" required>
+                </div>
+                <button type="submit" class="btn-action" style="width: 100%;">Sign Up</button>
+            </form>
+            <p style="margin-top:20px; font-size:14px;">Have account? <a href="#" onclick="showLogin()" style="color:#6c5ce7;">Login</a></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showSignup() { document.getElementById('login-section').style.display='none'; document.getElementById('signup-section').style.display='block'; }
+    function showLogin() { document.getElementById('login-section').style.display='block'; document.getElementById('signup-section').style.display='none'; }
+</script>
+{% endblock %}

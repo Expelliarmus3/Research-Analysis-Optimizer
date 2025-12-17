@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <h1 style="margin-bottom: 20px;">Professor Dashboard</h1>
+
+    <div class="card" style="margin-bottom: 40px;">
+        <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-plus-circle"></i> Post New Opportunity</h3>
+        <form action="/post_internship" method="POST">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <input type="text" name="title" placeholder="Internship/Paper Title" required style="padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px;">
+                <input type="text" name="domain" placeholder="Domain (e.g. AI, NLP)" required style="padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px;">
+            </div>
+            <textarea name="description" placeholder="Description & Requirements..." rows="3" style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 15px;"></textarea>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <select name="type" style="padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px;">
+                    <option value="Remote">Remote</option>
+                    <option value="Onsite">Onsite</option>
+                    <option value="Hybrid">Hybrid</option>
+                </select>
+                <button class="btn-action">Post Opportunity</button>
+            </div>
+        </form>
+    </div>
+
+    <h3 style="margin-bottom: 15px;">Your Active Postings</h3>
+    <div style="display: grid; gap: 20px;">
+        {% for job in internships %}
+        <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h4 style="font-size: 18px; margin-bottom: 5px;">{{ job.title }}</h4>
+                <span style="background: #eef2ff; color: #6366f1; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">{{ job.domain }}</span>
+            </div>
+            <div style="text-align: right;">
+                <div style="font-size: 24px; font-weight: bold; color: #0f172a;">{{ job.applications|length }}</div>
+                <div style="font-size: 12px; color: #64748b;">Applicants</div>
+            </div>
+        </div>
+        {% else %}
+        <p style="color: #94a3b8; text-align: center;">You haven't posted any internships yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
