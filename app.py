@@ -3,6 +3,7 @@ import time
 import json
 import re
 import requests
+import arxiv
 import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup
 from duckduckgo_search import DDGS
@@ -622,31 +623,56 @@ def accept_applicant(app_id):
 def generate_feed():
     if current_user.role != "Professor":
         return "Unauthorized"
-    client = arxiv.Client()
-    search = arxiv.Search(
-        query="artificial intelligence",
-        max_results=5,
-        sort_by=arxiv.SortCriterion.SubmittedDate,
-    )
-    for result in client.results(search):
-        try:
-            prompt = f"Summarize this research abstract into a 2-sentence internship opportunity description: {result.summary}"
-            response = active_model.generate_content(prompt)
-            ai_description = response.text
-        except:
-            ai_description = result.summary[:200] + "..."
 
-        new_internship = Internship(
-            title=result.title,
-            domain="AI & Machine Learning",
-            description=ai_description,
-            type="Remote Research",
-            user_id=current_user.id,
-            pdf_link=result.pdf_url,
-            vacancies="2",
+    try:
+        # Create the client
+        client = arxiv.Client()
+
+        # Search for recent AI papers (Reduced to 3 for speed)
+        search = arxiv.Search(
+            query="artificial intelligence",
+            max_results=3,  # Reduced from 5 to prevent timeouts
+            sort_by=arxiv.SortCriterion.SubmittedDate,
         )
-        db.session.add(new_internship)
-    db.session.commit()
+
+        count = 0
+        for result in client.results(search):
+            # Skip if this paper already exists in DB to save time
+            if Internship.query.filter_by(title=result.title).first():
+                continue
+
+            try:
+                # Try AI Summarization
+                prompt = f"Summarize this research abstract into a 2-sentence internship opportunity description: {result.summary}"
+                response = active_model.generate_content(prompt)
+                ai_description = response.text
+            except Exception as e:
+                # Fallback if AI fails or times out
+                print(f"AI Summary failed: {e}")
+                ai_description = result.summary[:300] + "..."
+
+            new_internship = Internship(
+                title=result.title,
+                domain="AI & Machine Learning",
+                description=ai_description,
+                type="Remote Research",
+                user_id=current_user.id,
+                pdf_link=result.pdf_url,
+                vacancies="2",
+            )
+            db.session.add(new_internship)
+            count += 1
+
+        db.session.commit()
+        if count > 0:
+            flash(f"Successfully added {count} new papers!", "success")
+        else:
+            flash("No new unique papers found.", "warning")
+
+    except Exception as e:
+        print(f"Feed Error: {e}")
+        flash("Error generating feed. Check logs.", "error")
+
     return redirect("/professor")
 
 
