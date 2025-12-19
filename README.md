@@ -1,5 +1,5 @@
 # Research Application Optimizer (RAO) - Project Documentation
-![WhatsApp Image 2025-12-19 at 22 34 25_f7373bb0](https://github.com/user-attachments/assets/a1c5923c-3ef8-4f6d-b872-e77f485ed415)
+![WhatsApp Image 2025-12-19 at 22 34 25_f7373bb0](https://github.com/user-attachments/assets/be322a74-5542-417a-84d6-bc0719e86047)
 
 ## Page 1: Project Overview & Getting Started
 ### 1. Executive Summary
